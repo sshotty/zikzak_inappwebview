@@ -38,7 +38,8 @@ class WebStorage {
       SessionStorage.fromPlatform(platform: platform.sessionStorage);
 
   ///{@macro zikzak_inappwebview_platform_interface.PlatformWebStorage.dispose}
-  void dispose() => platform.dispose();
+  void dispose({bool isKeepAlive = false}) =>
+      platform.dispose(isKeepAlive: isKeepAlive);
 }
 
 ///{@macro zikzak_inappwebview_platform_interface.PlatformStorage}
@@ -79,7 +80,8 @@ abstract class Storage implements PlatformStorage {
   Future<String> key({required int index}) => platform.key(index: index);
 
   ///{@macro zikzak_inappwebview_platform_interface.PlatformStorage.dispose}
-  void dispose() => platform.dispose();
+  void dispose({bool isKeepAlive = false}) =>
+      platform.dispose(isKeepAlive: isKeepAlive);
 }
 
 ///{@macro zikzak_inappwebview_platform_interface.PlatformLocalStorage}
