@@ -16,12 +16,18 @@ class _VirtualHostMappingInfo {
   _VirtualHostMappingInfo({required this.folderPath, required this.accessKind});
 }
 
+/// The Windows platform-side controller.
+///
+/// This class is intentionally inert: every Windows operation is served by
+/// [InAppWebViewWindowsController], which wraps the real
+/// `webview_windows` [WebviewController]. It exists only because
+/// `PlatformInAppWebViewController` is an abstract base that each platform
+/// must extend, and the platform instance returned by
+/// `InAppWebViewPlatform.instance` is this no-op stand-in.
 class InAppWebViewWindowsPlatform extends PlatformInAppWebViewController {
   InAppWebViewWindowsPlatform(
     PlatformInAppWebViewControllerCreationParams params,
   ) : super.implementation(params);
-
-  // TODO: Implement platform controller logic for Windows
 }
 
 class InAppWebViewWindowsWidget extends PlatformInAppWebViewWidget {
@@ -144,18 +150,10 @@ class _InAppWebViewWindowsWidgetStateImpl
         }
       }
 
-      // Setup listeners
-      _controller.url.listen((url) {
-        // TODO: handle url change
-      });
-
-      _controller.loadingState.listen((state) {
-        if (state == LoadingState.navigationCompleted) {
-          // TODO: handle load stop
-        } else if (state == LoadingState.loading) {
-          // TODO: handle load start
-        }
-      });
+      // NOTE: the url/loading listeners are attached after the controller is
+      // constructed (see below) because every handler needs to emit through
+      // it. `webview_windows`' `url` and `loadingState` are hot from
+      // initialization, so nothing is missed by deferring the subscription.
 
       if (!mounted) return;
       setState(() {
@@ -180,13 +178,38 @@ class _InAppWebViewWindowsWidgetStateImpl
         _controller,
       );
 
+      // Setup listeners. Every callback is forwarded with the same controller
+      // instance the app received from onWebViewCreated, so an app cannot tell
+      // this platform apart from macOS/iOS/Android.
+      _controller.url.listen((url) {
+        controller.emitUrlChange(url);
+        widget.params.onUpdateVisitedHistory?.call(
+          controller,
+          WebUri(url),
+          false,
+        );
+      });
+
+      _controller.loadingState.listen((state) {
+        if (state == LoadingState.navigationCompleted) {
+          controller.emitLoadStop();
+          // The title stream is single-subscription and already owned by the
+          // app-facing contract, so read it once per completed navigation.
+          unawaited(controller.emitTitleFromDocument());
+        } else if (state == LoadingState.loading) {
+          controller.emitLoadStart();
+        }
+      });
+
       if (widget.params.onWebViewCreated != null) {
         widget.params.onWebViewCreated!(
           widget.params.controllerFromPlatform!(controller),
         );
       }
     } catch (e) {
-      print("Failed to initialize webview: $e");
+      // A failed init must surface as a visible state, not a swallowed print:
+      // an app that believes the webview is live will drive a dead controller.
+      debugPrint('Failed to initialize webview: $e');
     }
   }
 

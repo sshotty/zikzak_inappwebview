@@ -42,6 +42,89 @@ class InAppWebViewWindowsController extends PlatformInAppWebViewController {
     this._controller,
   ) : super.implementation(params);
 
+  /// The creation params this controller was built with.
+  ///
+  /// `webview_windows` exposes `url`, `title`, and load state as streams that
+  /// are hot from initialization, and several of them are single-subscription.
+  /// Re-reading them on demand is therefore unreliable, so the widget pushes
+  /// each value here once and the getters below serve the cached copy.
+  PlatformInAppWebViewControllerCreationParams get _params => params;
+
+  String? _currentUrl;
+  String? _currentTitle;
+  int _progress = 0;
+  bool _loadInFlight = false;
+
+  /// Cached URL, pushed by the widget from `WebviewController.url`.
+  String? get currentUrl => _currentUrl;
+
+  /// Cached document title, pushed by the widget after each completed load.
+  String? get currentTitle => _currentTitle;
+
+  /// Cached load progress (0-100), pushed by the widget.
+  int get progress => _progress;
+
+  /// Whether a load is currently in flight.
+  ///
+  /// Named to avoid colliding with `PlatformInAppWebViewController.isLoading`,
+  /// which is a method on the base class.
+  bool get isLoadInFlight => _loadInFlight;
+
+  void emitUrlChange(String url) {
+    _currentUrl = url;
+  }
+
+  void emitLoadStart({int? progress}) {
+    _loadInFlight = true;
+    if (progress != null) {
+      _progress = progress;
+      _params.webviewParams?.onProgressChanged?.call(this, progress);
+    }
+    _params.webviewParams?.onLoadStart?.call(
+      this,
+      _currentUrl == null ? null : WebUri(_currentUrl!),
+    );
+  }
+
+  void emitLoadStop() {
+    _loadInFlight = false;
+    _progress = 100;
+    final url = _currentUrl;
+    _params.webviewParams?.onProgressChanged?.call(this, 100);
+    _params.webviewParams?.onLoadStop?.call(
+      this,
+      url == null ? null : WebUri(url),
+    );
+  }
+
+  /// Updates the cached progress and forwards it to the app.
+  void emitProgress(int progress) {
+    _progress = progress;
+    _params.webviewParams?.onProgressChanged?.call(this, progress);
+  }
+
+  /// Reads the document title from the live webview and caches it.
+  ///
+  /// `webview_windows`' `title` stream is single-subscription and is already
+  /// consumed by the widget, so the value is read once per completed load
+  /// through `executeScript` rather than by listening a second time.
+  Future<void> emitTitleFromDocument() async {
+    final raw = await _controller.executeScript('document.title');
+    if (raw is! String || raw.isEmpty) return;
+    _currentTitle = raw;
+    _params.webviewParams?.onTitleChanged?.call(this, raw);
+  }
+
+  /// Forwards a console message from the injected console shim.
+  void emitConsoleMessage(ConsoleMessage message) {
+    _params.webviewParams?.onConsoleMessage?.call(this, message);
+  }
+
+  /// Forwards a load failure to the app.
+  void emitLoadError(WebResourceRequest request, WebResourceError error) {
+    _params.webviewParams?.onReceivedError?.call(this, request, error);
+  }
+
   @override
   void addJavaScriptHandler({
     required String handlerName,
@@ -259,21 +342,18 @@ class InAppWebViewWindowsController extends PlatformInAppWebViewController {
 
   @override
   Future<WebUri?> getUrl() async {
-    // Return null as we can't synchronously get the current URL without tracking it
-    // and we don't want to block on the stream.
-    // TODO: Implement URL tracking
-    return null;
+    // Served from the cache the widget pushes, not from `_controller.url`:
+    // that stream is single-subscription and already owned by the load
+    // listener, so a second subscription here would throw.
+    final url = _currentUrl;
+    return url == null ? null : WebUri(url);
   }
 
   @override
-  Future<String?> getTitle() async {
-    return await _controller.title.first;
-  }
+  Future<String?> getTitle() async => _currentTitle;
 
   @override
-  Future<int?> getProgress() async {
-    return 100; // Placeholder
-  }
+  Future<int?> getProgress() async => _progress;
 
   @override
   Future<String?> getHtml() async {
@@ -310,7 +390,12 @@ class InAppWebViewWindowsController extends PlatformInAppWebViewController {
 
   @override
   Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration}) async {
-    // TODO: Implement createPdf for Windows when webview_windows supports it
+    // Not implemented, and not currently implementable: `webview_windows`
+    // exposes no `PrintToPdf` binding in either its Dart API or its WebView2
+    // bridge, so there is nothing to call. Returning null is the contract for
+    // "unavailable"; the app turns it into a typed backend failure rather than
+    // an empty PDF. Implementing this requires an upstream `webview_windows`
+    // change to surface `ICoreWebView2.PrintToPdfAsync`.
     return null;
   }
 
@@ -328,7 +413,10 @@ class InAppWebViewWindowsController extends PlatformInAppWebViewController {
   Future<PlatformPrintJobController?> printCurrentPage({
     PrintJobSettings? settings,
   }) async {
-    // TODO: Implement printCurrentPage for Windows
+    // Not implemented, and not currently implementable: `webview_windows`
+    // exposes no `ShowPrintUI` binding, so the print job controller can never
+    // be constructed. Returning null is the "unavailable" contract; the app
+    // maps it to a typed backend failure rather than a silently ignored print.
     return null;
   }
 
