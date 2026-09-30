@@ -16,6 +16,20 @@ class AndroidResource {
     String? this.defPackage,
   });
 
+  factory AndroidResource.anim({required String name, String? defPackage}) =>
+      $AndroidResource.anim(name: name, defPackage: defPackage);
+
+  factory AndroidResource.layout({required String name, String? defPackage}) =>
+      $AndroidResource.layout(name: name, defPackage: defPackage);
+
+  factory AndroidResource.id({required String name, String? defPackage}) =>
+      $AndroidResource.id(name: name, defPackage: defPackage);
+
+  factory AndroidResource.drawable({
+    required String name,
+    String? defPackage,
+  }) => $AndroidResource.drawable(name: name, defPackage: defPackage);
+
   factory AndroidResource.fromJson(Map<String, dynamic> json) =>
       _$AndroidResourceFromJson(json);
 
@@ -50,27 +64,30 @@ class AndroidResource {
     final _patchMap = _patcher.patchMap;
     return AndroidResource(
       name: _patchMap.containsKey(AndroidResource$.name_)
-          ? (_patchMap[AndroidResource$.name_] is Function)
-                ? _patchMap[AndroidResource$.name_](this.name)
-                : (_patchMap[AndroidResource$.name_] is Patch)
-                ? _patchMap[AndroidResource$.name_].applyTo(this.name)
-                : _patchMap[AndroidResource$.name_]
+          ? ((_patchMap[AndroidResource$.name_] is Function)
+                    ? _patchMap[AndroidResource$.name_](this.name)
+                    : (_patchMap[AndroidResource$.name_] is Patch)
+                    ? _patchMap[AndroidResource$.name_].applyTo(this.name)
+                    : _patchMap[AndroidResource$.name_])
+                as String
           : this.name,
       defType: _patchMap.containsKey(AndroidResource$.defType)
-          ? (_patchMap[AndroidResource$.defType] is Function)
-                ? _patchMap[AndroidResource$.defType](this.defType)
-                : (_patchMap[AndroidResource$.defType] is Patch)
-                ? _patchMap[AndroidResource$.defType].applyTo(this.defType)
-                : _patchMap[AndroidResource$.defType]
+          ? ((_patchMap[AndroidResource$.defType] is Function)
+                    ? _patchMap[AndroidResource$.defType](this.defType)
+                    : (_patchMap[AndroidResource$.defType] is Patch)
+                    ? _patchMap[AndroidResource$.defType].applyTo(this.defType)
+                    : _patchMap[AndroidResource$.defType])
+                as String?
           : this.defType,
       defPackage: _patchMap.containsKey(AndroidResource$.defPackage)
-          ? (_patchMap[AndroidResource$.defPackage] is Function)
-                ? _patchMap[AndroidResource$.defPackage](this.defPackage)
-                : (_patchMap[AndroidResource$.defPackage] is Patch)
-                ? _patchMap[AndroidResource$.defPackage].applyTo(
-                    this.defPackage,
-                  )
-                : _patchMap[AndroidResource$.defPackage]
+          ? ((_patchMap[AndroidResource$.defPackage] is Function)
+                    ? _patchMap[AndroidResource$.defPackage](this.defPackage)
+                    : (_patchMap[AndroidResource$.defPackage] is Patch)
+                    ? _patchMap[AndroidResource$.defPackage].applyTo(
+                        this.defPackage,
+                      )
+                    : _patchMap[AndroidResource$.defPackage])
+                as String?
           : this.defPackage,
     );
   }
@@ -101,7 +118,8 @@ class AndroidResource {
 
   Map<String, dynamic> toJsonLean() {
     final Map<String, dynamic> data = _$AndroidResourceToJson(this);
-    return _sanitizeJson(data);
+    _sanitizeJson(data);
+    return data;
   }
 
   dynamic _sanitizeJson(dynamic json) {

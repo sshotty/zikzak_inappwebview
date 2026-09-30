@@ -12,19 +12,19 @@ part of 'attributed_string.dart';
 class AttributedString {
   AttributedString({
     required String this.string,
-    Color_? this.backgroundColor,
+    Color? this.backgroundColor,
     double? this.baselineOffset,
     double? this.expansion,
-    Color_? this.foregroundColor,
+    Color? this.foregroundColor,
     double? this.kern,
     int? this.ligature,
     double? this.obliqueness,
-    Color_? this.strikethroughColor,
+    Color? this.strikethroughColor,
     UnderlineStyle? this.strikethroughStyle,
-    Color_? this.strokeColor,
+    Color? this.strokeColor,
     double? this.strokeWidth,
     AttributedStringTextEffectStyle? this.textEffect,
-    Color_? this.underlineColor,
+    Color? this.underlineColor,
     UnderlineStyle? this.underlineStyle,
   });
 
@@ -34,14 +34,14 @@ class AttributedString {
   final String string;
 
   @JsonKey(toJson: _backgroundColorToJson, fromJson: _backgroundColorFromJson)
-  final Color_? backgroundColor;
+  final Color? backgroundColor;
 
   final double? baselineOffset;
 
   final double? expansion;
 
   @JsonKey(toJson: _foregroundColorToJson, fromJson: _foregroundColorFromJson)
-  final Color_? foregroundColor;
+  final Color? foregroundColor;
 
   final double? kern;
 
@@ -53,7 +53,7 @@ class AttributedString {
     toJson: _strikethroughColorToJson,
     fromJson: _strikethroughColorFromJson,
   )
-  final Color_? strikethroughColor;
+  final Color? strikethroughColor;
 
   @JsonKey(
     toJson: _strikethroughStyleToJson,
@@ -62,32 +62,32 @@ class AttributedString {
   final UnderlineStyle? strikethroughStyle;
 
   @JsonKey(toJson: _strokeColorToJson, fromJson: _strokeColorFromJson)
-  final Color_? strokeColor;
+  final Color? strokeColor;
 
   final double? strokeWidth;
 
   final AttributedStringTextEffectStyle? textEffect;
 
   @JsonKey(toJson: _underlineColorToJson, fromJson: _underlineColorFromJson)
-  final Color_? underlineColor;
+  final Color? underlineColor;
 
   final UnderlineStyle? underlineStyle;
 
   AttributedString copyWith({
     String? string,
-    Color_? backgroundColor,
+    Color? backgroundColor,
     double? baselineOffset,
     double? expansion,
-    Color_? foregroundColor,
+    Color? foregroundColor,
     double? kern,
     int? ligature,
     double? obliqueness,
-    Color_? strikethroughColor,
+    Color? strikethroughColor,
     UnderlineStyle? strikethroughStyle,
-    Color_? strokeColor,
+    Color? strokeColor,
     double? strokeWidth,
     AttributedStringTextEffectStyle? textEffect,
-    Color_? underlineColor,
+    Color? underlineColor,
     UnderlineStyle? underlineStyle,
   }) {
     return AttributedString(
@@ -111,19 +111,19 @@ class AttributedString {
 
   AttributedString copyWithAttributedString({
     String? string,
-    Color_? backgroundColor,
+    Color? backgroundColor,
     double? baselineOffset,
     double? expansion,
-    Color_? foregroundColor,
+    Color? foregroundColor,
     double? kern,
     int? ligature,
     double? obliqueness,
-    Color_? strikethroughColor,
+    Color? strikethroughColor,
     UnderlineStyle? strikethroughStyle,
-    Color_? strokeColor,
+    Color? strokeColor,
     double? strokeWidth,
     AttributedStringTextEffectStyle? textEffect,
-    Color_? underlineColor,
+    Color? underlineColor,
     UnderlineStyle? underlineStyle,
   }) {
     return copyWith(
@@ -152,147 +152,166 @@ class AttributedString {
     final _patchMap = _patcher.patchMap;
     return AttributedString(
       string: _patchMap.containsKey(AttributedString$.string)
-          ? (_patchMap[AttributedString$.string] is Function)
-                ? _patchMap[AttributedString$.string](this.string)
-                : (_patchMap[AttributedString$.string] is Patch)
-                ? _patchMap[AttributedString$.string].applyTo(this.string)
-                : _patchMap[AttributedString$.string]
+          ? ((_patchMap[AttributedString$.string] is Function)
+                    ? _patchMap[AttributedString$.string](this.string)
+                    : (_patchMap[AttributedString$.string] is Patch)
+                    ? _patchMap[AttributedString$.string].applyTo(this.string)
+                    : _patchMap[AttributedString$.string])
+                as String
           : this.string,
       backgroundColor: _patchMap.containsKey(AttributedString$.backgroundColor)
-          ? (_patchMap[AttributedString$.backgroundColor] is Function)
-                ? _patchMap[AttributedString$.backgroundColor](
-                    this.backgroundColor,
-                  )
-                : (_patchMap[AttributedString$.backgroundColor] is Patch)
-                ? _patchMap[AttributedString$.backgroundColor].applyTo(
-                    this.backgroundColor,
-                  )
-                : _patchMap[AttributedString$.backgroundColor]
+          ? ((_patchMap[AttributedString$.backgroundColor] is Function)
+                    ? _patchMap[AttributedString$.backgroundColor](
+                        this.backgroundColor,
+                      )
+                    : (_patchMap[AttributedString$.backgroundColor] is Patch)
+                    ? _patchMap[AttributedString$.backgroundColor].applyTo(
+                        this.backgroundColor,
+                      )
+                    : _patchMap[AttributedString$.backgroundColor])
+                as Color?
           : this.backgroundColor,
       baselineOffset: _patchMap.containsKey(AttributedString$.baselineOffset)
-          ? (_patchMap[AttributedString$.baselineOffset] is Function)
-                ? _patchMap[AttributedString$.baselineOffset](
-                    this.baselineOffset,
-                  )
-                : (_patchMap[AttributedString$.baselineOffset] is Patch)
-                ? _patchMap[AttributedString$.baselineOffset].applyTo(
-                    this.baselineOffset,
-                  )
-                : _patchMap[AttributedString$.baselineOffset]
+          ? ((_patchMap[AttributedString$.baselineOffset] is Function)
+                    ? _patchMap[AttributedString$.baselineOffset](
+                        this.baselineOffset,
+                      )
+                    : (_patchMap[AttributedString$.baselineOffset] is Patch)
+                    ? _patchMap[AttributedString$.baselineOffset].applyTo(
+                        this.baselineOffset,
+                      )
+                    : _patchMap[AttributedString$.baselineOffset])
+                as double?
           : this.baselineOffset,
       expansion: _patchMap.containsKey(AttributedString$.expansion)
-          ? (_patchMap[AttributedString$.expansion] is Function)
-                ? _patchMap[AttributedString$.expansion](this.expansion)
-                : (_patchMap[AttributedString$.expansion] is Patch)
-                ? _patchMap[AttributedString$.expansion].applyTo(this.expansion)
-                : _patchMap[AttributedString$.expansion]
+          ? ((_patchMap[AttributedString$.expansion] is Function)
+                    ? _patchMap[AttributedString$.expansion](this.expansion)
+                    : (_patchMap[AttributedString$.expansion] is Patch)
+                    ? _patchMap[AttributedString$.expansion].applyTo(
+                        this.expansion,
+                      )
+                    : _patchMap[AttributedString$.expansion])
+                as double?
           : this.expansion,
       foregroundColor: _patchMap.containsKey(AttributedString$.foregroundColor)
-          ? (_patchMap[AttributedString$.foregroundColor] is Function)
-                ? _patchMap[AttributedString$.foregroundColor](
-                    this.foregroundColor,
-                  )
-                : (_patchMap[AttributedString$.foregroundColor] is Patch)
-                ? _patchMap[AttributedString$.foregroundColor].applyTo(
-                    this.foregroundColor,
-                  )
-                : _patchMap[AttributedString$.foregroundColor]
+          ? ((_patchMap[AttributedString$.foregroundColor] is Function)
+                    ? _patchMap[AttributedString$.foregroundColor](
+                        this.foregroundColor,
+                      )
+                    : (_patchMap[AttributedString$.foregroundColor] is Patch)
+                    ? _patchMap[AttributedString$.foregroundColor].applyTo(
+                        this.foregroundColor,
+                      )
+                    : _patchMap[AttributedString$.foregroundColor])
+                as Color?
           : this.foregroundColor,
       kern: _patchMap.containsKey(AttributedString$.kern)
-          ? (_patchMap[AttributedString$.kern] is Function)
-                ? _patchMap[AttributedString$.kern](this.kern)
-                : (_patchMap[AttributedString$.kern] is Patch)
-                ? _patchMap[AttributedString$.kern].applyTo(this.kern)
-                : _patchMap[AttributedString$.kern]
+          ? ((_patchMap[AttributedString$.kern] is Function)
+                    ? _patchMap[AttributedString$.kern](this.kern)
+                    : (_patchMap[AttributedString$.kern] is Patch)
+                    ? _patchMap[AttributedString$.kern].applyTo(this.kern)
+                    : _patchMap[AttributedString$.kern])
+                as double?
           : this.kern,
       ligature: _patchMap.containsKey(AttributedString$.ligature)
-          ? (_patchMap[AttributedString$.ligature] is Function)
-                ? _patchMap[AttributedString$.ligature](this.ligature)
-                : (_patchMap[AttributedString$.ligature] is Patch)
-                ? _patchMap[AttributedString$.ligature].applyTo(this.ligature)
-                : _patchMap[AttributedString$.ligature]
+          ? ((_patchMap[AttributedString$.ligature] is Function)
+                    ? _patchMap[AttributedString$.ligature](this.ligature)
+                    : (_patchMap[AttributedString$.ligature] is Patch)
+                    ? _patchMap[AttributedString$.ligature].applyTo(
+                        this.ligature,
+                      )
+                    : _patchMap[AttributedString$.ligature])
+                as int?
           : this.ligature,
       obliqueness: _patchMap.containsKey(AttributedString$.obliqueness)
-          ? (_patchMap[AttributedString$.obliqueness] is Function)
-                ? _patchMap[AttributedString$.obliqueness](this.obliqueness)
-                : (_patchMap[AttributedString$.obliqueness] is Patch)
-                ? _patchMap[AttributedString$.obliqueness].applyTo(
-                    this.obliqueness,
-                  )
-                : _patchMap[AttributedString$.obliqueness]
+          ? ((_patchMap[AttributedString$.obliqueness] is Function)
+                    ? _patchMap[AttributedString$.obliqueness](this.obliqueness)
+                    : (_patchMap[AttributedString$.obliqueness] is Patch)
+                    ? _patchMap[AttributedString$.obliqueness].applyTo(
+                        this.obliqueness,
+                      )
+                    : _patchMap[AttributedString$.obliqueness])
+                as double?
           : this.obliqueness,
       strikethroughColor:
           _patchMap.containsKey(AttributedString$.strikethroughColor)
-          ? (_patchMap[AttributedString$.strikethroughColor] is Function)
-                ? _patchMap[AttributedString$.strikethroughColor](
-                    this.strikethroughColor,
-                  )
-                : (_patchMap[AttributedString$.strikethroughColor] is Patch)
-                ? _patchMap[AttributedString$.strikethroughColor].applyTo(
-                    this.strikethroughColor,
-                  )
-                : _patchMap[AttributedString$.strikethroughColor]
+          ? ((_patchMap[AttributedString$.strikethroughColor] is Function)
+                    ? _patchMap[AttributedString$.strikethroughColor](
+                        this.strikethroughColor,
+                      )
+                    : (_patchMap[AttributedString$.strikethroughColor] is Patch)
+                    ? _patchMap[AttributedString$.strikethroughColor].applyTo(
+                        this.strikethroughColor,
+                      )
+                    : _patchMap[AttributedString$.strikethroughColor])
+                as Color?
           : this.strikethroughColor,
       strikethroughStyle:
           _patchMap.containsKey(AttributedString$.strikethroughStyle)
-          ? (_patchMap[AttributedString$.strikethroughStyle] is Function)
-                ? _patchMap[AttributedString$.strikethroughStyle](
-                    this.strikethroughStyle,
-                  )
-                : (_patchMap[AttributedString$.strikethroughStyle] is Patch)
-                ? _patchMap[AttributedString$.strikethroughStyle].applyTo(
-                    this.strikethroughStyle,
-                  )
-                : _patchMap[AttributedString$.strikethroughStyle]
+          ? ((_patchMap[AttributedString$.strikethroughStyle] is Function)
+                    ? _patchMap[AttributedString$.strikethroughStyle](
+                        this.strikethroughStyle,
+                      )
+                    : (_patchMap[AttributedString$.strikethroughStyle] is Patch)
+                    ? _patchMap[AttributedString$.strikethroughStyle].applyTo(
+                        this.strikethroughStyle,
+                      )
+                    : _patchMap[AttributedString$.strikethroughStyle])
+                as UnderlineStyle?
           : this.strikethroughStyle,
       strokeColor: _patchMap.containsKey(AttributedString$.strokeColor)
-          ? (_patchMap[AttributedString$.strokeColor] is Function)
-                ? _patchMap[AttributedString$.strokeColor](this.strokeColor)
-                : (_patchMap[AttributedString$.strokeColor] is Patch)
-                ? _patchMap[AttributedString$.strokeColor].applyTo(
-                    this.strokeColor,
-                  )
-                : _patchMap[AttributedString$.strokeColor]
+          ? ((_patchMap[AttributedString$.strokeColor] is Function)
+                    ? _patchMap[AttributedString$.strokeColor](this.strokeColor)
+                    : (_patchMap[AttributedString$.strokeColor] is Patch)
+                    ? _patchMap[AttributedString$.strokeColor].applyTo(
+                        this.strokeColor,
+                      )
+                    : _patchMap[AttributedString$.strokeColor])
+                as Color?
           : this.strokeColor,
       strokeWidth: _patchMap.containsKey(AttributedString$.strokeWidth)
-          ? (_patchMap[AttributedString$.strokeWidth] is Function)
-                ? _patchMap[AttributedString$.strokeWidth](this.strokeWidth)
-                : (_patchMap[AttributedString$.strokeWidth] is Patch)
-                ? _patchMap[AttributedString$.strokeWidth].applyTo(
-                    this.strokeWidth,
-                  )
-                : _patchMap[AttributedString$.strokeWidth]
+          ? ((_patchMap[AttributedString$.strokeWidth] is Function)
+                    ? _patchMap[AttributedString$.strokeWidth](this.strokeWidth)
+                    : (_patchMap[AttributedString$.strokeWidth] is Patch)
+                    ? _patchMap[AttributedString$.strokeWidth].applyTo(
+                        this.strokeWidth,
+                      )
+                    : _patchMap[AttributedString$.strokeWidth])
+                as double?
           : this.strokeWidth,
       textEffect: _patchMap.containsKey(AttributedString$.textEffect)
-          ? (_patchMap[AttributedString$.textEffect] is Function)
-                ? _patchMap[AttributedString$.textEffect](this.textEffect)
-                : (_patchMap[AttributedString$.textEffect] is Patch)
-                ? _patchMap[AttributedString$.textEffect].applyTo(
-                    this.textEffect,
-                  )
-                : _patchMap[AttributedString$.textEffect]
+          ? ((_patchMap[AttributedString$.textEffect] is Function)
+                    ? _patchMap[AttributedString$.textEffect](this.textEffect)
+                    : (_patchMap[AttributedString$.textEffect] is Patch)
+                    ? _patchMap[AttributedString$.textEffect].applyTo(
+                        this.textEffect,
+                      )
+                    : _patchMap[AttributedString$.textEffect])
+                as AttributedStringTextEffectStyle?
           : this.textEffect,
       underlineColor: _patchMap.containsKey(AttributedString$.underlineColor)
-          ? (_patchMap[AttributedString$.underlineColor] is Function)
-                ? _patchMap[AttributedString$.underlineColor](
-                    this.underlineColor,
-                  )
-                : (_patchMap[AttributedString$.underlineColor] is Patch)
-                ? _patchMap[AttributedString$.underlineColor].applyTo(
-                    this.underlineColor,
-                  )
-                : _patchMap[AttributedString$.underlineColor]
+          ? ((_patchMap[AttributedString$.underlineColor] is Function)
+                    ? _patchMap[AttributedString$.underlineColor](
+                        this.underlineColor,
+                      )
+                    : (_patchMap[AttributedString$.underlineColor] is Patch)
+                    ? _patchMap[AttributedString$.underlineColor].applyTo(
+                        this.underlineColor,
+                      )
+                    : _patchMap[AttributedString$.underlineColor])
+                as Color?
           : this.underlineColor,
       underlineStyle: _patchMap.containsKey(AttributedString$.underlineStyle)
-          ? (_patchMap[AttributedString$.underlineStyle] is Function)
-                ? _patchMap[AttributedString$.underlineStyle](
-                    this.underlineStyle,
-                  )
-                : (_patchMap[AttributedString$.underlineStyle] is Patch)
-                ? _patchMap[AttributedString$.underlineStyle].applyTo(
-                    this.underlineStyle,
-                  )
-                : _patchMap[AttributedString$.underlineStyle]
+          ? ((_patchMap[AttributedString$.underlineStyle] is Function)
+                    ? _patchMap[AttributedString$.underlineStyle](
+                        this.underlineStyle,
+                      )
+                    : (_patchMap[AttributedString$.underlineStyle] is Patch)
+                    ? _patchMap[AttributedString$.underlineStyle].applyTo(
+                        this.underlineStyle,
+                      )
+                    : _patchMap[AttributedString$.underlineStyle])
+                as UnderlineStyle?
           : this.underlineStyle,
     );
   }
@@ -375,7 +394,8 @@ class AttributedString {
 
   Map<String, dynamic> toJsonLean() {
     final Map<String, dynamic> data = _$AttributedStringToJson(this);
-    return _sanitizeJson(data);
+    _sanitizeJson(data);
+    return data;
   }
 
   dynamic _sanitizeJson(dynamic json) {
@@ -408,7 +428,7 @@ extension AttributedStringPropertyHelpers on AttributedString {
     return this.backgroundColor == null;
   }
 
-  Color_ get backgroundColorRequired {
+  Color get backgroundColorRequired {
     return this.backgroundColor ??
         (throw StateError('backgroundColor is required but was null'));
   }
@@ -447,7 +467,7 @@ extension AttributedStringPropertyHelpers on AttributedString {
     return this.foregroundColor == null;
   }
 
-  Color_ get foregroundColorRequired {
+  Color get foregroundColorRequired {
     return this.foregroundColor ??
         (throw StateError('foregroundColor is required but was null'));
   }
@@ -498,7 +518,7 @@ extension AttributedStringPropertyHelpers on AttributedString {
     return this.strikethroughColor == null;
   }
 
-  Color_ get strikethroughColorRequired {
+  Color get strikethroughColorRequired {
     return this.strikethroughColor ??
         (throw StateError('strikethroughColor is required but was null'));
   }
@@ -560,7 +580,7 @@ extension AttributedStringPropertyHelpers on AttributedString {
     return this.strokeColor == null;
   }
 
-  Color_ get strokeColorRequired {
+  Color get strokeColorRequired {
     return this.strokeColor ??
         (throw StateError('strokeColor is required but was null'));
   }
@@ -603,7 +623,7 @@ extension AttributedStringPropertyHelpers on AttributedString {
     return this.underlineColor == null;
   }
 
-  Color_ get underlineColorRequired {
+  Color get underlineColorRequired {
     return this.underlineColor ??
         (throw StateError('underlineColor is required but was null'));
   }
@@ -693,7 +713,7 @@ class AttributedStringPatch
     return this;
   }
 
-  AttributedStringPatch withBackgroundColor(Color_? value) {
+  AttributedStringPatch withBackgroundColor(Color? value) {
     patchMap[AttributedString$.backgroundColor] = value;
     return this;
   }
@@ -708,7 +728,7 @@ class AttributedStringPatch
     return this;
   }
 
-  AttributedStringPatch withForegroundColor(Color_? value) {
+  AttributedStringPatch withForegroundColor(Color? value) {
     patchMap[AttributedString$.foregroundColor] = value;
     return this;
   }
@@ -728,7 +748,7 @@ class AttributedStringPatch
     return this;
   }
 
-  AttributedStringPatch withStrikethroughColor(Color_? value) {
+  AttributedStringPatch withStrikethroughColor(Color? value) {
     patchMap[AttributedString$.strikethroughColor] = value;
     return this;
   }
@@ -738,7 +758,7 @@ class AttributedStringPatch
     return this;
   }
 
-  AttributedStringPatch withStrokeColor(Color_? value) {
+  AttributedStringPatch withStrokeColor(Color? value) {
     patchMap[AttributedString$.strokeColor] = value;
     return this;
   }
@@ -753,7 +773,7 @@ class AttributedStringPatch
     return this;
   }
 
-  AttributedStringPatch withUnderlineColor(Color_? value) {
+  AttributedStringPatch withUnderlineColor(Color? value) {
     patchMap[AttributedString$.underlineColor] = value;
     return this;
   }
@@ -768,7 +788,7 @@ class AttributedStringPatch
 abstract final class AttributedStringFields {
   static const string = Field<AttributedString, String>('string', _$string);
 
-  static const backgroundColor = Field<AttributedString, Color_?>(
+  static const backgroundColor = Field<AttributedString, Color?>(
     'backgroundColor',
     _$backgroundColor,
   );
@@ -783,7 +803,7 @@ abstract final class AttributedStringFields {
     _$expansion,
   );
 
-  static const foregroundColor = Field<AttributedString, Color_?>(
+  static const foregroundColor = Field<AttributedString, Color?>(
     'foregroundColor',
     _$foregroundColor,
   );
@@ -797,7 +817,7 @@ abstract final class AttributedStringFields {
     _$obliqueness,
   );
 
-  static const strikethroughColor = Field<AttributedString, Color_?>(
+  static const strikethroughColor = Field<AttributedString, Color?>(
     'strikethroughColor',
     _$strikethroughColor,
   );
@@ -807,7 +827,7 @@ abstract final class AttributedStringFields {
     _$strikethroughStyle,
   );
 
-  static const strokeColor = Field<AttributedString, Color_?>(
+  static const strokeColor = Field<AttributedString, Color?>(
     'strokeColor',
     _$strokeColor,
   );
@@ -823,7 +843,7 @@ abstract final class AttributedStringFields {
         _$textEffect,
       );
 
-  static const underlineColor = Field<AttributedString, Color_?>(
+  static const underlineColor = Field<AttributedString, Color?>(
     'underlineColor',
     _$underlineColor,
   );
@@ -837,7 +857,7 @@ abstract final class AttributedStringFields {
     return e.string;
   }
 
-  static Color_? _$backgroundColor(AttributedString e) {
+  static Color? _$backgroundColor(AttributedString e) {
     return e.backgroundColor;
   }
 
@@ -849,7 +869,7 @@ abstract final class AttributedStringFields {
     return e.expansion;
   }
 
-  static Color_? _$foregroundColor(AttributedString e) {
+  static Color? _$foregroundColor(AttributedString e) {
     return e.foregroundColor;
   }
 
@@ -865,7 +885,7 @@ abstract final class AttributedStringFields {
     return e.obliqueness;
   }
 
-  static Color_? _$strikethroughColor(AttributedString e) {
+  static Color? _$strikethroughColor(AttributedString e) {
     return e.strikethroughColor;
   }
 
@@ -873,7 +893,7 @@ abstract final class AttributedStringFields {
     return e.strikethroughStyle;
   }
 
-  static Color_? _$strokeColor(AttributedString e) {
+  static Color? _$strokeColor(AttributedString e) {
     return e.strokeColor;
   }
 
@@ -885,7 +905,7 @@ abstract final class AttributedStringFields {
     return e.textEffect;
   }
 
-  static Color_? _$underlineColor(AttributedString e) {
+  static Color? _$underlineColor(AttributedString e) {
     return e.underlineColor;
   }
 

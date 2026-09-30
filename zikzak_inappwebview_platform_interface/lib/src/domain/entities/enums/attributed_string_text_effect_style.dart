@@ -1,5 +1,3 @@
-
-
 ///Class that represents the supported proxy types.
 enum AttributedStringTextEffectStyle {
   ///A graphical text effect that gives glyphs the appearance of letterpress printing, which involves pressing the type into the paper.
@@ -7,13 +5,19 @@ enum AttributedStringTextEffectStyle {
 }
 
 ///AttributedStringTextEffectStyle wire values are strings — lookup by value.
-const _attributedStringTextEffectStyle_wire = ['NONE', 'LETTERPRESS_STYLE'];
+///
+///Wire value matches the pre-migration `@ExchangeableEnum` codegen
+///(`letterpressStyle`), not the Dart enum name.
+const _attributedStringTextEffectStyle_wire = ['letterpressStyle'];
 
-AttributedStringTextEffectStyle? attributedStringTextEffectStyleFromWire(Object? value) {
+AttributedStringTextEffectStyle? attributedStringTextEffectStyleFromWire(
+  Object? value,
+) {
   if (value is! String) return null;
   final index = _attributedStringTextEffectStyle_wire.indexOf(value);
   return index >= 0 ? AttributedStringTextEffectStyle.values[index] : null;
 }
 
-Object? attributedStringTextEffectStyleToWire(AttributedStringTextEffectStyle? value) =>
-    value == null ? null : _attributedStringTextEffectStyle_wire[value.index];
+Object? attributedStringTextEffectStyleToWire(
+  AttributedStringTextEffectStyle? value,
+) => value == null ? null : _attributedStringTextEffectStyle_wire[value.index];

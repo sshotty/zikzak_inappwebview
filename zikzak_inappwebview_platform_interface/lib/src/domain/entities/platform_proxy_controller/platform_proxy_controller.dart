@@ -82,7 +82,7 @@ abstract class PlatformProxyController extends PlatformInterface
   ///Clears the proxy settings.
   ///Network connections are not guaranteed to immediately use the new proxy setting; wait for the method to return before loading a page.
   ///{@endtemplate}
-  Future<void> clearProxyOverride() {
+  Future<void> clearProxyOverride({String? profileId}) {
     throw UnimplementedError(
       'clearProxyOverride is not implemented on the current platform',
     );
@@ -98,7 +98,15 @@ class ProxySettings {
   AndroidProxySettings? androidProxySettings;
   IOSProxySettings? iOSProxySettings;
 
-  ProxySettings({this.androidProxySettings, this.iOSProxySettings});
+  /// Optional profile identifier — when set, the proxy is stored per-profile
+  /// and applied to the WKWebsiteDataStore with that persistent identifier.
+  String? profileId;
+
+  ProxySettings({
+    this.androidProxySettings,
+    this.iOSProxySettings,
+    this.profileId,
+  });
 }
 
 @Zorphy(
@@ -111,13 +119,14 @@ abstract class $IOSProxySettings {
   ///Scheme is optional, if present must be `HTTP`, `HTTPS` or [SOCKS](https://tools.ietf.org/html/rfc1928) and defaults to `HTTP`.
   @JsonKey(defaultValue: '')
   String get proxyUrl;
+
   ///A Boolean that indicates whether or not a proxy configuration allows failover to non-proxied connections.
   ///Failover isn’t allowed by default.
   @JsonKey(defaultValue: false)
   bool get allowFailover;
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<String> get excludedDomains;
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<String> get matchDomains;
 }
 
@@ -132,13 +141,15 @@ abstract class $AndroidProxySettings {
   ///A bypass rule describes URLs that should skip proxy override settings and make a direct connection instead. These can be URLs or IP addresses. Wildcards are accepted.
   ///For instance, the rule "*example.com" would mean that requests to "http://example.com" and "www.example.com" would not be directed to any proxy,
   ///instead, would be made directly to the origin specified by the URL.
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<String> get bypassRules;
+
   ///List of scheme filters.
   ///
   ///URLs that match these scheme filters are connected to directly instead of using a proxy server.
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<String> get directs;
+
   ///List of proxy rules to be used for all URLs. This method can be called multiple times to add multiple rules. Additional rules have decreasing precedence.
   ///
   ///Proxy is a string in the format `[scheme://]host[:port]`.
@@ -147,12 +158,14 @@ abstract class $AndroidProxySettings {
   ///Port number is optional and defaults to `80` for `HTTP`, `443` for `HTTPS` and `1080` for `SOCKS`.
   ///
   ///The correct syntax for hosts is defined by [RFC 3986](https://tools.ietf.org/html/rfc3986#section-3.2.2).
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<ProxyRule> get proxyRules;
+
   ///Hostnames without a period in them (and that are not IP literals) will skip proxy settings and be connected to directly instead. Examples: `"abc"`, `"local"`, `"some-domain"`.
   ///
   ///Hostnames with a trailing dot are not considered simple by this definition.
   bool? get bypassSimpleHostnames;
+
   ///By default, certain hostnames implicitly bypass the proxy if they are link-local IPs, or localhost addresses.
   ///For instance hostnames matching any of (non-exhaustive list):
   ///localhost
@@ -163,6 +176,7 @@ abstract class $AndroidProxySettings {
   ///[FE80::]/10
   ///Set this to `true` to override the default behavior and force localhost and link-local URLs to be sent through the proxy.
   bool? get removeImplicitRules;
+
   ///Reverse the bypass list.
   ///
   ///The default value is `false`, in which case all URLs will use proxy settings except the ones in the bypass list, which will be connected to directly instead.

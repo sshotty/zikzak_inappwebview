@@ -7,6 +7,8 @@
 // as hex, displayMode via the polymorphic type-key deserializer.
 
 import 'package:zorphy_annotation/zorphy_annotation.dart';
+import 'dart:ui';
+
 import '../../../types/main.dart';
 import '../../../util.dart';
 
@@ -29,13 +31,13 @@ abstract class $ChromeSafariBrowserSettings {
   @JsonKey(defaultValue: true)
   bool? get showTitle;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  Color_? get toolbarBackgroundColor;
+  Color? get toolbarBackgroundColor;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  Color_? get navigationBarColor;
+  Color? get navigationBarColor;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  Color_? get navigationBarDividerColor;
+  Color? get navigationBarDividerColor;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  Color_? get secondaryToolbarColor;
+  Color? get secondaryToolbarColor;
   @JsonKey(defaultValue: false)
   bool? get enableUrlBarHiding;
   @JsonKey(defaultValue: false)
@@ -49,7 +51,7 @@ abstract class $ChromeSafariBrowserSettings {
   bool? get noHistory;
   @JsonKey(defaultValue: false)
   bool? get isTrustedWebActivity;
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<String>? get additionalTrustedOrigins;
   @JsonKey(fromJson: _displayModeFromJson, toJson: _displayModeToJson)
   TrustedWebActivityDisplayMode? get displayMode;
@@ -76,9 +78,9 @@ abstract class $ChromeSafariBrowserSettings {
   )
   DismissButtonStyle? get dismissButtonStyle;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  Color_? get preferredBarTintColor;
+  Color? get preferredBarTintColor;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  Color_? get preferredControlTintColor;
+  Color? get preferredControlTintColor;
   @JsonKey(
     defaultValue: ModalPresentationStyle.FULL_SCREEN,
     fromJson: _presentationStyleFromJson,
@@ -97,13 +99,13 @@ abstract class $ChromeSafariBrowserSettings {
   UIEventAttribution? get eventAttribution;
 }
 
-Color_? _colorFromJson(Object? value) {
+Color? _colorFromJson(Object? value) {
   if (value == null) return null;
   final color = UtilColor.fromStringRepresentation(value as String);
   return color == null ? null : Color_(color.value);
 }
 
-Object? _colorToJson(Color_? color) => color?.toHex();
+Object? _colorToJson(Color? color) => color?.toHex();
 
 CustomTabsShareState? _shareStateFromJson(Object? value) {
   if (value is! int) return null;
@@ -112,11 +114,10 @@ CustomTabsShareState? _shareStateFromJson(Object? value) {
       : null;
 }
 
-Object? _shareStateToJson(CustomTabsShareState? shareState) => shareState?.index;
+Object? _shareStateToJson(CustomTabsShareState? shareState) =>
+    shareState?.index;
 
-TrustedWebActivityScreenOrientation? _screenOrientationFromJson(
-  Object? value,
-) {
+TrustedWebActivityScreenOrientation? _screenOrientationFromJson(Object? value) {
   if (value is! int) return null;
   return value >= 0 && value < TrustedWebActivityScreenOrientation.values.length
       ? TrustedWebActivityScreenOrientation.values[value]
@@ -188,13 +189,26 @@ TrustedWebActivityDisplayMode? _displayModeFromJson(Object? value) {
   }
 }
 
-Object? _displayModeToJson(TrustedWebActivityDisplayMode? displayMode) =>
-    displayMode?.toJson();
+Object? _displayModeToJson(TrustedWebActivityDisplayMode? displayMode) {
+  if (displayMode == null) return null;
+  // The base class has no toMap/toJson member of its own (zorphy puts
+  // toJson on an extension), so static dispatch would emit `{}` and lose the
+  // type-key wire. Dispatch on the concrete subtype to restore the old wire
+  // ({"type": ..., <subtype fields>}).
+  switch (displayMode) {
+    case final TrustedWebActivityImmersiveDisplayMode immersive:
+      return immersive.toMap();
+    case final TrustedWebActivityDefaultDisplayMode defaultMode:
+      return defaultMode.toMap();
+    default:
+      return TrustedWebActivityDefaultDisplayMode().toMap();
+  }
+}
 
 List<AndroidResource>? _startAnimationsFromJson(Object? value) {
   if (value is! List) return null;
   return value
-      .map((e) => AndroidResource.fromJson((e as Map).cast<String, dynamic>())!)
+      .map((e) => AndroidResource.fromJson((e as Map).cast<String, dynamic>()))
       .toList();
 }
 
@@ -204,7 +218,7 @@ Object? _startAnimationsToJson(List<AndroidResource>? startAnimations) =>
 List<AndroidResource>? _exitAnimationsFromJson(Object? value) {
   if (value is! List) return null;
   return value
-      .map((e) => AndroidResource.fromJson((e as Map).cast<String, dynamic>())!)
+      .map((e) => AndroidResource.fromJson((e as Map).cast<String, dynamic>()))
       .toList();
 }
 

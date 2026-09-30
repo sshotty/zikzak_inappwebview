@@ -20,7 +20,7 @@ class TrustedWebActivityImmersiveDisplayMode
   TrustedWebActivityImmersiveDisplayMode({
     required this.isSticky,
     this.displayCutoutMode = LayoutInDisplayCutoutMode.DEFAULT,
-  }) {}
+  });
 
   ///Gets a possible [TrustedWebActivityImmersiveDisplayMode] instance from a [Map] value.
   static TrustedWebActivityImmersiveDisplayMode? fromMap(
@@ -32,7 +32,8 @@ class TrustedWebActivityImmersiveDisplayMode
     final instance = TrustedWebActivityImmersiveDisplayMode(
       isSticky: map['isSticky'],
     );
-    instance.displayCutoutMode = LayoutInDisplayCutoutMode.values[map['displayCutoutMode'] as int];
+    instance.displayCutoutMode =
+        LayoutInDisplayCutoutMode.values[map['displayCutoutMode'] as int];
     return instance;
   }
 
@@ -63,7 +64,8 @@ class TrustedWebActivityImmersiveDisplayMode
   }
 
   @override
-  TrustedWebActivityImmersiveDisplayMode copyWithTrustedWebActivityDisplayMode() {
+  TrustedWebActivityImmersiveDisplayMode
+  copyWithTrustedWebActivityDisplayMode() {
     return copyWith();
   }
 
