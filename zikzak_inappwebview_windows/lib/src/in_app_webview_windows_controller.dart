@@ -70,59 +70,37 @@ class InAppWebViewWindowsController extends PlatformInAppWebViewController {
   /// which is a method on the base class.
   bool get isLoadInFlight => _loadInFlight;
 
-  void emitUrlChange(String url) {
+  /// Caches the URL the widget observed.
+  ///
+  /// The load-state callbacks belong to the widget's own dispatcher
+  /// (`dispatchLoadingStateChange`); this cache only feeds the synchronous
+  /// getters below, which cannot re-read `webview_windows`' single-subscription
+  /// streams.
+  void cacheUrl(String url) {
     _currentUrl = url;
   }
 
-  void emitLoadStart({int? progress}) {
-    _loadInFlight = true;
-    if (progress != null) {
-      _progress = progress;
-      _params.webviewParams?.onProgressChanged?.call(this, progress);
-    }
-    _params.webviewParams?.onLoadStart?.call(
-      this,
-      _currentUrl == null ? null : WebUri(_currentUrl!),
-    );
+  /// Caches whether a load is in flight, and the progress that implies.
+  void cacheLoadingState({required bool isLoading}) {
+    _loadInFlight = isLoading;
+    _progress = isLoading ? 0 : 100;
   }
 
-  void emitLoadStop() {
-    _loadInFlight = false;
-    _progress = 100;
-    final url = _currentUrl;
-    _params.webviewParams?.onProgressChanged?.call(this, 100);
-    _params.webviewParams?.onLoadStop?.call(
-      this,
-      url == null ? null : WebUri(url),
-    );
-  }
-
-  /// Updates the cached progress and forwards it to the app.
-  void emitProgress(int progress) {
-    _progress = progress;
-    _params.webviewParams?.onProgressChanged?.call(this, progress);
-  }
-
-  /// Reads the document title from the live webview and caches it.
+  /// Reads the document title from the live webview, caches it, and reports a
+  /// change to the app.
   ///
   /// `webview_windows`' `title` stream is single-subscription and is already
   /// consumed by the widget, so the value is read once per completed load
-  /// through `executeScript` rather than by listening a second time.
-  Future<void> emitTitleFromDocument() async {
+  /// through `executeScript` rather than by listening a second time. Windows
+  /// has no other title source, so this is the only path that reaches
+  /// `onTitleChanged`.
+  Future<void> refreshDocumentTitle() async {
     final raw = await _controller.executeScript('document.title');
-    if (raw is! String || raw.isEmpty) return;
+    if (raw is! String || raw.isEmpty || raw == _currentTitle) {
+      return;
+    }
     _currentTitle = raw;
     _params.webviewParams?.onTitleChanged?.call(this, raw);
-  }
-
-  /// Forwards a console message from the injected console shim.
-  void emitConsoleMessage(ConsoleMessage message) {
-    _params.webviewParams?.onConsoleMessage?.call(this, message);
-  }
-
-  /// Forwards a load failure to the app.
-  void emitLoadError(WebResourceRequest request, WebResourceError error) {
-    _params.webviewParams?.onReceivedError?.call(this, request, error);
   }
 
   @override

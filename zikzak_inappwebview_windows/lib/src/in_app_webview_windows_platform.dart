@@ -243,9 +243,21 @@ class _InAppWebViewWindowsWidgetStateImpl
       // the loadingState event lands before the matching urlChanged event
       // (webview_windows 0.4.0 has no synchronous url getter).
       String? currentUrl;
-      _urlSubscription = _controller.url.listen((url) => currentUrl = url);
+      _urlSubscription = _controller.url.listen((url) {
+        currentUrl = url;
+        // The synchronous getters cannot re-read this single-subscription
+        // stream, so the controller keeps the last pushed value.
+        controller.cacheUrl(url);
+      });
       _loadingStateSubscription = _controller.loadingState.listen((state) {
         if (!mounted) return;
+        controller.cacheLoadingState(isLoading: state == LoadingState.loading);
+        if (state == LoadingState.navigationCompleted) {
+          // `webview_windows`' title stream is single-subscription and already
+          // owned by this widget, so the title is read once per completed load
+          // rather than listened to a second time.
+          unawaited(controller.refreshDocumentTitle());
+        }
         dispatchLoadingStateChange(
           state: state,
           url: currentUrl,
